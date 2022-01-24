@@ -46,12 +46,26 @@ function createNewNote(body, notesArray) { // function to accept POST route
     return note;
 }
 
-
+function validateNewNote(note) { //validate data before created and sent to db.json
+    if (!note.title || typeof note.title !=='string') {
+        return false;
+    }
+    if (!note.text || typeof note.text !=='string') {
+        return false
+    }
+    return true
+}
 
 app.post('/api/notes', (req, res) => { // posting user inputed data to db (database) and in JSON format
     req.body.id = notes.length.toString(); // id setup based on length property (one number ahead of last index)
-})
 
+    if (!validateNewNote(req.body)) { // if any data in req.body is incorrect, send 400 error message
+        res.status(400).send('The Note is not properly formatted.'); // response method 
+    } else {
+        const note = createNewNote(req.body, notes);
+        res.json(note);
+    }
+})
 
 app.listen(PORT, () => { // // listens for any server request
     console.log(`API server now on port ${PORT}`); 
