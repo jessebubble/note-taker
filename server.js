@@ -34,10 +34,23 @@ app.get('*', (req, res) => { // wildcard route
 })
 
 
-app.post('/api/notes', (req, res) => {
-    req.body.id = notes.length.toString();
-})
+function createNewNote(body, notesArray) { // function to accept POST route 
+    const note = body;
+    notesArray.push(note); // pushes note to path below on line 41
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'), // joins note with our db (database) directory  
+        JSON.stringify({ notes: notesArray }, null, 2) // converts array data to JSON 
+        // null means we don not want to edit any existing date
+        // 2 is used to make data more readable  - creates white space
+    );
+    return note;
+}
 
+
+
+app.post('/api/notes', (req, res) => { // posting user inputed data to db (database) and in JSON format
+    req.body.id = notes.length.toString(); // id setup based on length property (one number ahead of last index)
+})
 
 
 app.listen(PORT, () => { // // listens for any server request
