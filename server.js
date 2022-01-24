@@ -1,3 +1,4 @@
+// Dependencies
 const express = require('express'); // calls express
 const fs = require('fs'); // calls file system
 const path = require('path'); // node.js API - makes FS more predictable when working with Heroku
@@ -14,6 +15,22 @@ const PORT = process.env.PORT || 3001; // environment variable for Heroku to run
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json()); // takes incoming POST data in the form of json and parses it
 app.use(express.static('public')); // gives access to front end code in public folder
+
+
+app.get('/api/notes', (req, res) => {
+    res.json(notes);
+})
+app.get('/', (req,res) => { // route to display content from index.html
+    res.sendFile(path.join(__dirname, './public/index.html'));
+})
+
+app.get('/notes', (req, res) => { // route to display HTML content from note.html
+    res.sendFile(path.join(__dirname, './public/notes.html'));
+})
+
+app.get('*', (req, res) => { // wildcard route
+    res.sendFile(path.join(__dirname, './public/index.html'));
+})
 
 
 
